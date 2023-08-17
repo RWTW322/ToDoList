@@ -86,6 +86,14 @@
     margin-bottom: 12px;
 }
 
+.toDo.checked h2 {
+    text-decoration: line-through;
+}
+
+.toDo.checked span {
+    text-decoration: line-through;
+}
+
 div h2 {
     color: #000;
     font-family: Inter;
@@ -101,12 +109,4 @@ div span {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-}
-
-.clearToDos {
-    margin: 0px 12px;
-}
-
-.checkboxToDo:checked + div {
-	text-decoration: line-through;
 }
