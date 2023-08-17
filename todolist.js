@@ -24,9 +24,6 @@
 const modalFormBtn = document.querySelector(".modalFormBtn");
 const modalForm = document.querySelector(".modal-wrapper");
 const toDoList = document.querySelector(".toDolist");
-const addBtn = document.querySelector("#submitBtn");
-const inputTitle = document.querySelector(".modal-form_input-title");
-const inputDescription = document.querySelector(".modal-form_input-description");
 
 /**
  * 
@@ -70,7 +67,7 @@ const createUniqueId = (lastId = 0) => {
 }
 
 
-const storedTodos = getTodoList();
+let storedTodos = getTodoList();
 
 const uniqueId = createUniqueId(storedTodos[storedTodos.length - 1]?.id);
 
@@ -134,25 +131,23 @@ function renderTodos() {
 function submitToDo(event) {
     event.preventDefault();
 
-    const titleValue = inputTitle.value;
-    const descriptionValue = inputDescription.value;
-    inputTitle.value = "";
-    inputDescription.value = "";
-
     const newTodo = {
-        title: titleValue,
-        description: descriptionValue,
+        title: event.target.title.value,
+        description: event.target.description.value,
         done: false,
         id: uniqueId(),
     };
     addTodoToLS(newTodo)
     createTodo(newTodo);
+    storedTodos = getTodoList();
     modalForm.style.display = "none";
 }
 
 modalFormBtn.addEventListener("click", () => {
     modalForm.style.display = "flex";
-    addBtn.addEventListener("click", submitToDo);
+
+    modalForm.onsubmit = submitToDo
+    // addBtn.addEventListener("click", submitToDo);
 });
 
 window.addEventListener("click", (event) => {
