@@ -22,7 +22,7 @@
  */
 
 const modalFormBtn = document.querySelector(".modalFormBtn");
-const modalForm = document.querySelector(".modal-wrapper");
+// const modalForm = document.querySelector(".modal-wrapper");
 const toDoList = document.querySelector(".toDolist");
 
 /**
@@ -140,19 +140,36 @@ function submitToDo(event) {
     addTodoToLS(newTodo)
     createTodo(newTodo);
     storedTodos = getTodoList();
-    modalForm.style.display = "none";
+    const modalForm = document.querySelector(".modal-wrapper");
+    document.body.removeChild(modalForm)
 }
 
 modalFormBtn.addEventListener("click", () => {
-    modalForm.style.display = "flex";
-
+    const modalData = `
+    
+      <form class="modal-form">
+        <h2 class="modal-form_title">ADD TODO</h2>
+        <input type="text" name="title" class="modal-form_input-title" id="inputTitle" placeholder="Title" autofocus>
+        <input type="text" name="description" class="modal-form_input-description" id="inputDescription" placeholder="Description">
+        <button class="modal-form_input-submit button" id="submitBtn" type="submit">ADD</button>
+      </form>
+    
+    `
+    const wrapper = document.createElement('div')
+    wrapper.classList.add('modal-wrapper')
+    wrapper.innerHTML = modalData;
+    document.body.appendChild(wrapper)
+    document.getElementById('inputTitle').focus();
+    const modalForm = document.querySelector(".modal-wrapper");
     modalForm.onsubmit = submitToDo
     // addBtn.addEventListener("click", submitToDo);
 });
 
 window.addEventListener("click", (event) => {
+    const modalForm = document.querySelector(".modal-wrapper");
     if (event.target === modalForm) {
-        modalForm.style.display = "none";
+        
+        document.body.removeChild(modalForm)
     }
 });
 
