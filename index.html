@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="./styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <title>ToDo List</title>
+</head>
+
+<body>
+  <div class="wrapper">
+
+    <div class="modal-wrapper">
+      <form class="modal-form">
+        <h2 class="modal-form_title">ADD TODO</h2>
+        <input type="text" class="modal-form_input-title" id="inputTitle" placeholder="Title" autofocus>
+        <input type="text" class="modal-form_input-description" id="inputDescription" placeholder="Description">
+        <button class="modal-form_input-submit button" id="submitBtn" type="submit">ADD</button>
+      </form>
+    </div>
+
+    <button class="modalFormBtn button">ADD TODO</button>
+    <ul class="toDolist">
+
+    </ul>
+    <button class="clearToDos button" type="submit">DELETE ALL</button>
+  </div>
+
+  <script src="./todolist.js"></script>
+</body>
+
+</html>
