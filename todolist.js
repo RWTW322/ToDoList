@@ -28,29 +28,88 @@ const addBtn = document.querySelector("#submitBtn");
 const inputTitle = document.querySelector(".modal-form_input-title");
 const inputDescription = document.querySelector(".modal-form_input-description");
 
-const storedItems = localStorage.getItem("TODOLIST");
-if (!storedItems) {
-    localStorage.setItem("TODOLIST", "[]")
+/**
+ * 
+ * HELPERS
+ */
+
+const LS_KEY = "TODOLIST"
+
+const getTodoList = () => {
+    const list = localStorage.getItem(LS_KEY);
+    if (!list) {
+        localStorage.setItem(LS_KEY, "[]")
+        return []
+    }
+    return JSON.parse(list)
 }
 
-const storedTodos = JSON.parse(localStorage.getItem("TODOLIST"));
-let counterId = storedTodos.length > 1 ? storedTodos[storedTodos.length - 1].id + 1 : 1;
+const addTodoToLS = (todo) => {
+    const list = getTodoList();
+    localStorage.setItem(LS_KEY, JSON.stringify([...list, todo]))
+}
 
-function createTodo(todo) {
+const updateTodoInLS = (todo) => {
+    const list = getTodoList().map(item=>{
+        if(item.id === todo.id){
+            return todo
+        }
+        return item;
+    });
+    localStorage.setItem(LS_KEY, JSON.stringify(list));
+}
+
+
+
+const createUniqueId = (lastId = 0) => {
+    let last = lastId;
+    return () => {
+        last += 1;
+        return last
+    }
+}
+
+
+const storedTodos = getTodoList();
+
+const uniqueId = createUniqueId(storedTodos[storedTodos.length - 1]?.id);
+
+
+const changeTodoState = (event) => {
+    const checkbox = event.target;
+    const todo = document.querySelector(`#todo-item-${checkbox.id}`);
+    const isChecked = event.target.checked;
+    const updateTodo = storedTodos.find(todo=>todo.id === Number(checkbox.id))
+    updateTodo.done = isChecked;
+    updateTodoInLS(updateTodo);
+    if(isChecked){
+        todo.classList.add('checked')    
+    }else{
+        todo.classList.remove('checked')    
+    }
+}
+
+function createTodo({ id, ...todo }) {
     const listItem = document.createElement('li');
     const toDoTitle = document.createElement("h2");
     const toDoDescription = document.createElement("span");
     const checkboxContainer = document.createElement("div");
     const textContainer = document.createElement("div");
-    
-    toDoTitle.id = "title" + counterId;
-    toDoDescription.id = 'description' + counterId;
+    listItem.id = `todo-item-${id}`;
+    toDoTitle.id = "title" + id;
+    toDoDescription.id = 'description' + id;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
-    checkbox.id = counterId;
+    checkbox.id = id;
+    checkbox.checked = todo.done;
+
+    if(todo.done){
+        listItem.classList.add('checked')
+    }
 
     checkbox.classList.add("checkboxToDo");
+    checkbox.onchange = changeTodoState;
     listItem.classList.add("toDo");
     toDoTitle.classList.add("toDoTitle");
     toDoDescription.classList.add("toDoDescription");
@@ -84,14 +143,9 @@ function submitToDo(event) {
         title: titleValue,
         description: descriptionValue,
         done: false,
-        id: counterId,
+        id: uniqueId(),
     };
-
-    counterId++;
-
-    storedTodos.push(newTodo);
-    localStorage.setItem("TODOLIST", JSON.stringify(storedTodos));
-
+    addTodoToLS(newTodo)
     createTodo(newTodo);
     modalForm.style.display = "none";
 }
@@ -107,35 +161,5 @@ window.addEventListener("click", (event) => {
     }
 });
 
-const clearBtn = document.querySelector(".clearToDos");
-
-clearBtn.addEventListener("click", () => {
-    localStorage.clear();
-    location.reload();
-})
 
 renderTodos();
-
-const checkList = document.querySelectorAll('.checkboxToDo');
-
-checkList.forEach(item => {
-    item.addEventListener("click", (event) => {
-        const check = event.target;
-
-        let numId = Number(check.getAttribute("id"));
-        const selectedToDo = storedTodos.find(todo => todo.id === numId);
-        const checkedTitle = document.querySelector(`#title${numId}`);
-        const checkedDescription = document.querySelector(`#description${numId}`);
-
-        if (check.checked) {
-            checkedTitle.style.textDecoration = "line-through";
-            checkedDescription.style.textDecoration = "line-through";
-            selectedToDo.done = true;
-        } else {
-            checkedTitle.style.textDecoration = "none";
-            checkedDescription.style.textDecoration = "none";
-            selectedToDo.done = false;
-        }
-    });
-});
-
