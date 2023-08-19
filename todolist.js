@@ -90,8 +90,11 @@ function createTodo({ id, ...todo }) {
     const listItem = document.createElement('li');
     const toDoTitle = document.createElement("h2");
     const toDoDescription = document.createElement("span");
-    const checkboxContainer = document.createElement("div");
+    const checkboxContainer = document.createElement("label");
+    const customCheckbox = document.createElement("span");
     const textContainer = document.createElement("div");
+    checkboxContainer.classList.add("checkboxContainer");
+    customCheckbox.classList.add("customCheckbox");
     listItem.id = `todo-item-${id}`;
     toDoTitle.id = "title" + id;
     toDoDescription.id = 'description' + id;
@@ -120,6 +123,7 @@ function createTodo({ id, ...todo }) {
     textContainer.appendChild(toDoTitle);
     textContainer.appendChild(toDoDescription);
     checkboxContainer.appendChild(checkbox);
+    checkboxContainer.appendChild(customCheckbox);
 }
 
 function renderTodos() {
